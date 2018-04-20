@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lm.dao.MenuMapper">
+ <resultMap type="com.lm.model.Menu" id="recursionMenuMap">
+     <id column="id" property="id" jdbcType="VARCHAR"/>
+     <result column="text" property="text" jdbcType="VARCHAR"/>
+     <result column="icon" property="icon" jdbcType="VARCHAR"/>
+     <result column="url" property="url" jdbcType="VARCHAR"/>
+     <collection property="menus" ofType="com.lm.model.Menu" column="id" select="findMenuByParentId"/>
+ </resultMap>
+
+ <select id="findAllRecursion" resultMap="recursionMenuMap">
+     SELECT id,text,icon,url FROM t_menu WHERE parent_id ='' or parent_id is NULL ORDER BY ordered ASC
+ </select>
+
+ <select id="findMenuByParentId" resultMap="recursionMenuMap">
+     SELECT id,text,icon,url FROM t_menu WHERE parent_id = #{id} ORDER BY ordered ASC
+ </select>
+</mapper>
